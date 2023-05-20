@@ -37,9 +37,8 @@ public class WhatsappRepository {
 
     public Group createGroup(List<User> users) {
         int count = users.size();
-        Group group = new Group();
         if(count == 2){
-            group.setNumberOfParticipants(count);
+            Group group = new Group((users.get(1).getName()), count);
             group.setName((users.get(1).getName()));
             adminMap.put(group, users.get(0));
             groupUserMap.put(group,users);
@@ -48,8 +47,7 @@ public class WhatsappRepository {
 
             customGroupCount++;
             String name = "Group "+String.valueOf(customGroupCount);
-            group.setName(name);
-            group.setNumberOfParticipants(count);
+            Group group = new Group(name, count);
             groupUserMap.put(group, users);
             adminMap.put(group, users.get(0));
             return group;
@@ -58,12 +56,9 @@ public class WhatsappRepository {
 
     public int createMessage(String content) {
         messageId++;
-        Message message = new Message();
-        message.setId(messageId);
-        message.setContent(content);
         long currentTimeMillis = System.currentTimeMillis();
         Date date = new Date(currentTimeMillis);
-        message.setTimestamp(date);
+        Message message = new Message(messageId, content, date);
         return messageId;
     }
 
@@ -117,25 +112,24 @@ public class WhatsappRepository {
                 ans += userList.size();
             }
         }
-        Message message = new Message();
         for(Message message1 : senderMap.keySet()){
             User user1 = senderMap.get(user);
             if(user1 == user){
-                message = message1;
                 senderMap.remove(message1, user1);
                 ans += senderMap.size();
             }
         }
 
-        for(Group group : groupMessageMap.keySet()){
-            List<Message> messageList = groupMessageMap.get(group);
-            for(Message message1 : messageList){
-                if(message1 == message){
-                    messageList.remove(message1);
-                    ans += messageList.size();
-                }
-            }
-        }
+//        Message message = senderMap.containsValue(user);
+//        for(Group group : groupMessageMap.keySet()){
+//            List<Message> messageList = groupMessageMap.get(group);
+//            for(Message message1 : messageList){
+//                if(){
+//                    messageList.remove(message1);
+//                    ans += messageList.size();
+//                }
+//            }
+//        }
         return ans;
     }
 
